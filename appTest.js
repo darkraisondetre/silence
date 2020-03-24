@@ -2,6 +2,9 @@ import masterRoom from "../rooms/master.js";
 import livingRoom from "../rooms/living.js";
 import kitchen from "../rooms/kitchen.js";
 import dinner from "../rooms/dinnering.js";
+import sphere1 from "./static.js";
+
+console.log(sphere1);
 
 const stats = initStats();
 
@@ -26,7 +29,7 @@ camera.lookAt(scene.position);
 //controls 
 
 let controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableZoom = true;
+// controls.enableZoom = false;
 controls.rotateSpeed = 0.6;
 controls.enableDamping = true;
 controls.screenSpacePanning = true;
@@ -48,18 +51,17 @@ function initStats() {
 var counter = 1;
 let currentSphereImage = masterRoom[`key${counter}`];
 let sphereImage = new THREE.TextureLoader().load(currentSphereImage);
-let sphereGeometry = new THREE.SphereGeometry(10, 32, 32);
+let sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
 let sphereMaterial = new THREE.MeshBasicMaterial({
     map: sphereImage,
     side: THREE.BackSide
 });
-
 let sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 scene.add(sphere);
 
 let currentSphereImage2 = livingRoom[`key${counter}`];
 let sphereImage2 = new THREE.TextureLoader().load(currentSphereImage2);
-let sphereGeometry2 = new THREE.SphereGeometry(10, 32, 32);
+let sphereGeometry2 = new THREE.SphereGeometry(1, 32, 32);
 let sphereMaterial2 = new THREE.MeshBasicMaterial({
     map: sphereImage2,
     side: THREE.BackSide
@@ -69,7 +71,7 @@ let sphere2 = new THREE.Mesh(sphereGeometry2, sphereMaterial2);
 
 let currentSphereImage3 = kitchen[`key${counter}`];
 let sphereImage3 = new THREE.TextureLoader().load(currentSphereImage3);
-let sphereGeometry3 = new THREE.SphereGeometry(10, 32, 32);
+let sphereGeometry3 = new THREE.SphereGeometry(1, 32, 32);
 let sphereMaterial3 = new THREE.MeshBasicMaterial({
     map: sphereImage3,
     side: THREE.BackSide
@@ -79,7 +81,7 @@ let sphere3 = new THREE.Mesh(sphereGeometry3, sphereMaterial3);
 
 let currentSphereImage4 = dinner[`key${counter}`];
 let sphereImage4 = new THREE.TextureLoader().load(currentSphereImage4);
-let sphereGeometry4 = new THREE.SphereGeometry(10, 32, 32);
+let sphereGeometry4 = new THREE.SphereGeometry(1, 32, 32);
 let sphereMaterial4 = new THREE.MeshBasicMaterial({
     map: sphereImage4,
     side: THREE.BackSide
@@ -89,15 +91,18 @@ let sphere4 = new THREE.Mesh(sphereGeometry4, sphereMaterial4);
 
 let currentSphereImage41 = dinner[`key${2}`];
 let sphereImage41 = new THREE.TextureLoader().load(currentSphereImage41);
-let sphereGeometry41 = new THREE.SphereGeometry(10, 32, 32);
+let sphereGeometry41 = new THREE.SphereGeometry(1, 32, 32);
 let sphereMaterial41 = new THREE.MeshBasicMaterial({
     map: sphereImage41,
-    side: THREE.BackSide
+    side: THREE.BackSide,
 });
-
+// sphereMaterial41.map.rotation = 0.001;
+// sphereMaterial41.
 let sphere41 = new THREE.Mesh(sphereGeometry41, sphereMaterial41);
-sphere41.position.x = 30
-
+sphere41.position.x = 1.5;
+sphere41.position.z = 1;
+// sphere41.rotateOnAxis(new THREE.Vector3(0, 1, 0), 1);
+// sphere41.quaternion
 //buttons
 
 button[0].addEventListener('click', () => {
@@ -131,21 +136,17 @@ button[3].addEventListener('click', () => {
 //Tween animation
 
 button[4].addEventListener("click", function() {
-    let tween = new TWEEN.Tween(sphere41.position).to({ x: 0 }, 1000);
-    console.log('click');
+    sphere41.material.transparent = true;
+    sphere41.material.opacity = 0;
+    sphere41.rotation.y = Math.PI;
+    let tween = new TWEEN.Tween(sphere41.position).to({ x: 0, z: 0 }, 600).start();
+    let tweenOpac = new TWEEN.Tween(sphere41.material).to({ opacity: 1 }, 1300).easing(TWEEN.Easing.Exponential.Out).start();
+    sphere4.material.transparent = true;
+    let tween2 = new TWEEN.Tween(sphere4.material).to({ opacity: 0 }, 1300).easing(TWEEN.Easing.Exponential.Out).start();
+    () => {
+        sphere4.remove();
+    }
 
-    // let opac = function opac() {
-    var current = {
-        opacity: 1
-    };
-
-    let tween2 = new TWEEN.Tween(current)
-        .to({ opacity: 0 }, 1000)
-        .onUpdate(function() {
-            sphere4.material.opacity = 0;
-        })
-        // tween2.chain(tween)
-    tween2.start()
 }, false);
 
 //render scene
